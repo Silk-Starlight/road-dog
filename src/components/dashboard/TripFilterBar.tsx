@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import {
@@ -16,15 +17,25 @@ interface TripFilterBarProps {
 }
 
 const TripFilterBar = ({
-  onCreateTrip = () => {},
+  onCreateTrip,
   onFilterChange = () => {},
   selectedFilter = "all",
 }: TripFilterBarProps) => {
+  const navigate = useNavigate();
+
+  const handleCreateClick = () => {
+    if (onCreateTrip) {
+      onCreateTrip();
+    } else {
+      navigate("/create-trip");
+    }
+  };
+
   return (
     <div className="w-full h-20 bg-white border-b px-6 flex items-center justify-between">
       <Button
         size="lg"
-        onClick={onCreateTrip}
+        onClick={handleCreateClick}
         className="bg-primary hover:bg-primary/90"
       >
         <PlusCircle className="mr-2 h-5 w-5" />

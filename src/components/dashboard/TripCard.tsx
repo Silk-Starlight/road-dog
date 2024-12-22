@@ -6,7 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Share2, Edit, Trash2 } from "lucide-react";
+import { Share2, Edit, Trash2, MapPin, Route } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +26,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import TripMap from "@/components/maps/TripMap";
 
 interface TripCardProps {
   thumbnail?: string;
   destination?: string;
+  startPoint?: string;
   startDate?: string;
   endDate?: string;
   status?: "upcoming" | "past";
@@ -41,6 +43,7 @@ interface TripCardProps {
 const TripCard = ({
   thumbnail = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800",
   destination = "Road Trip Adventure",
+  startPoint = "Starting Point",
   startDate = "2024-06-01",
   endDate = "2024-06-07",
   status = "upcoming",
@@ -50,6 +53,7 @@ const TripCard = ({
 }: TripCardProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [showShareDialog, setShowShareDialog] = React.useState(false);
+  const [showMapDialog, setShowMapDialog] = React.useState(false);
   const shareLink = `https://roadtrip.example.com/trips/${Math.random().toString(36).substring(7)}`;
 
   return (
@@ -72,12 +76,23 @@ const TripCard = ({
       </CardHeader>
       <CardContent className="p-4">
         <h3 className="text-xl font-semibold mb-2">{destination}</h3>
+        <div className="flex items-center text-gray-600 text-sm mb-2">
+          <MapPin className="h-4 w-4 mr-1" />
+          <span>{startPoint}</span>
+        </div>
         <p className="text-gray-600 text-sm">
           {new Date(startDate).toLocaleDateString()} -{" "}
           {new Date(endDate).toLocaleDateString()}
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-end gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setShowMapDialog(true)}
+        >
+          <Route className="h-4 w-4" />
+        </Button>
         <Button
           variant="outline"
           size="icon"
@@ -146,6 +161,24 @@ const TripCard = ({
               Copy Link
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showMapDialog} onOpenChange={setShowMapDialog}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Trip Route</DialogTitle>
+            <DialogDescription>
+              View the route from {startPoint} to {destination}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="h-[400px] mt-4">
+            <TripMap
+              startPoint={startPoint}
+              destination={destination}
+              className="h-full"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </Card>

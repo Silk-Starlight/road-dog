@@ -1,59 +1,13 @@
 import React from "react";
 import TripCard from "./TripCard";
-
-interface Trip {
-  id: string;
-  thumbnail: string;
-  destination: string;
-  startDate: string;
-  endDate: string;
-  status: "upcoming" | "past";
-}
+import { Trip } from "@/lib/trips";
 
 interface TripGridProps {
   trips?: Trip[];
+  onDelete?: (id: string) => void;
 }
 
-const defaultTrips: Trip[] = [
-  {
-    id: "1",
-    thumbnail: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800",
-    destination: "Pacific Coast Highway",
-    startDate: "2024-06-01",
-    endDate: "2024-06-07",
-    status: "upcoming",
-  },
-  {
-    id: "2",
-    thumbnail: "https://images.unsplash.com/photo-1533106497176-45ae19e68ba2",
-    destination: "Route 66 Adventure",
-    startDate: "2024-07-15",
-    endDate: "2024-07-25",
-    status: "upcoming",
-  },
-  {
-    id: "3",
-    thumbnail: "https://images.unsplash.com/photo-1510312305653-8ed496efae75",
-    destination: "Blue Ridge Parkway",
-    startDate: "2023-10-01",
-    endDate: "2023-10-07",
-    status: "past",
-  },
-];
-
-const TripGrid = ({ trips = defaultTrips }: TripGridProps) => {
-  const handleEdit = (tripId: string) => {
-    console.log("Edit trip:", tripId);
-  };
-
-  const handleDelete = (tripId: string) => {
-    console.log("Delete trip:", tripId);
-  };
-
-  const handleShare = (tripId: string, link: string) => {
-    console.log("Share trip:", tripId, "with link:", link);
-  };
-
+const TripGrid = ({ trips = [], onDelete }: TripGridProps) => {
   return (
     <div className="w-full min-h-[700px] bg-gray-50 p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
@@ -62,12 +16,10 @@ const TripGrid = ({ trips = defaultTrips }: TripGridProps) => {
             key={trip.id}
             thumbnail={trip.thumbnail}
             destination={trip.destination}
-            startDate={trip.startDate}
-            endDate={trip.endDate}
+            startDate={trip.start_date}
+            endDate={trip.end_date}
             status={trip.status}
-            onEdit={() => handleEdit(trip.id)}
-            onDelete={() => handleDelete(trip.id)}
-            onShare={(link) => handleShare(trip.id, link)}
+            onDelete={() => onDelete?.(trip.id)}
           />
         ))}
       </div>
